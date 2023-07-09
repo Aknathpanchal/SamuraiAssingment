@@ -25,3 +25,21 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+
+.ql-toolbar.ql-snow {
+  border-color: hsla(220, 13%, 69%, 0.2) !important;
+  border-radius: 0.5rem 0.5rem 0 0;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  padding: 8px;
+}
+
+.ql-container.ql-snow {
+  border-radius: 0 0 0.5rem 0.5rem;
+  border-color: hsla(220, 13%, 69%, 0.2) !important;
+}
+
+/* .ql-editor::placeholder {
+color: rgb(30, 118, 195) !important;
+} */
