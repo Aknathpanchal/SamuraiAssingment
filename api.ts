@@ -1,5 +1,6 @@
 import { ITask } from "./types/tasks";
 
+// const baseUrl = process.env.API_URL
 const baseUrl = "http://localhost:3002";
 
 export const getAllTodos = async (): Promise<ITask[]> => {
@@ -30,6 +31,12 @@ export const editTodo = async (todo: ITask): Promise<ITask> => {
   });
   const updatedTodo = await res.json();
   return updatedTodo;
+};
+
+export const getSingleTodo = async (todo: ITask): Promise<ITask> => {
+  const res = await fetch(`${baseUrl}/tasks/${todo.id}`, {});
+  const singleTodo = await res.json();
+  return singleTodo;
 };
 
 export const deleteTodo = async (id: string): Promise<void> => {

@@ -22,7 +22,7 @@ const AddTask = () => {
       id: uuidv4(),
       title: inputValue,
       desc: editorValue,
-      status: "TODO",
+      status: "To Do",
     });
     setInputValue("");
     setEditorValue("");

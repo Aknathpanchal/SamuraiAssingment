@@ -1,7 +1,7 @@
 "use client";
 
 import { ITask, modules, formats } from "@/types/tasks";
-import { FormEventHandler, useState } from "react";
+import { ChangeEvent, FormEventHandler, useEffect, useState } from "react";
 import { FiEdit, FiTrash } from "react-icons/fi";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -12,29 +12,31 @@ import { deleteTodo, editTodo } from "@/api";
 
 interface TaskProps {
   task: ITask;
+  index: number;
 }
 
-const Task: React.FC<TaskProps> = ({ task }) => {
+const Task: React.FC<TaskProps> = ({ task , index }) => {
   const router = useRouter();
   const [modalOpenToEdit, setModalOpenToEdit] = useState<boolean>(false);
   const [modalOpenToDelete, setModalOpenToDelete] = useState<boolean>(false);
+  const [modalOpenToDetail, setModalOpenToDetail] = useState<boolean>(false);
   const [editInputValue, setEditInputValue] = useState<string>(task.title);
   const [editEditorValue, setEditEditorValue] = useState<string>(task.desc);
+  const [statusValue, setStatusValue] = useState<string>(task.status);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [isSelectChanged, setIsSelectChanged] = useState<boolean>(false);
 
   const handleEditFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    await editTodo({
-      id: task.id,
-      title: editInputValue,
-      desc: editEditorValue,
-      status: "TODO",
-    });
+    setIsFormSubmitted(true);
+    setIsSelectChanged(false);
     setModalOpenToEdit(false);
     router.refresh();
   };
 
   const handleEditorChange = (newValue: string) => {
     setEditEditorValue(newValue);
+    setIsFormSubmitted(false);
   };
 
   const handleDeleteTask = async (id: string) => {
@@ -43,16 +45,56 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     router.refresh();
   };
 
+  const handleSelectChange = async (e: ChangeEvent<HTMLSelectElement>) => {
+    const newStatus = e.target.value;
+    if (newStatus !== statusValue) {
+      setStatusValue(newStatus);
+      setIsSelectChanged(true);
+      setIsFormSubmitted(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isFormSubmitted) {
+      editTask();
+    } else if (isSelectChanged) {
+      editTask();
+    }
+  }, [isFormSubmitted, isSelectChanged]);
+
+  const editTask = async () => {
+    await editTodo({
+      id: task.id,
+      title: editInputValue,
+      desc: editEditorValue,
+      status: statusValue,
+    });
+    router.refresh();
+  };
+
   return (
     <tr key={task.id}>
-      <td>{task.id}</td>
-      <td>{task.title}</td>
-      <td>{task.status}</td>
-      <td className="flex gap-5">
+      <td className="text-center">{index+1}</td>
+      <td className="text-center">{task.title}</td>
+      <td className="text-center">
+        <select 
+        className="select select-ghost w-full max-w-xs" 
+        value={statusValue} 
+        onChange={handleSelectChange}
+        >
+
+  <option value="To Do">To Do</option>
+  <option value="In Progress">In Progress</option>
+  <option value="Completed">Completed</option>
+</select>
+
+
+      </td>
+      <td className="flex gap-5 text-center items-center justify-center ">
         <FiEdit
           cursor="pointer"
           className="text-blue-500"
-          size={25}
+          size={45}
           onClick={() => setModalOpenToEdit(true)}
         />
 
@@ -89,7 +131,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
         <FiTrash
           cursor="pointer"
           className="text-red-500"
-          size={25}
+          size={45}
           onClick={() => setModalOpenToDelete(true)}
         />
 
@@ -104,6 +146,18 @@ const Task: React.FC<TaskProps> = ({ task }) => {
             <button className="btn" onClick={() => handleDeleteTask(task.id)}>
               Yes
             </button>
+          </div>
+        </Modal>
+
+        <Modal
+          modalOpen={modalOpenToDetail}
+          setModalOpen={setModalOpenToDetail}
+        >
+          <h3 className="text-lg">
+            Are you sure, you want to delete this task?
+          </h3>
+          <div className="modal-action">
+           
           </div>
         </Modal>
       </td>
