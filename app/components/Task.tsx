@@ -6,7 +6,7 @@ import { FiEdit, FiTrash } from "react-icons/fi";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Modal from "./Modal";
-import { deleteTodo, editTodo, getAllTodos } from "@/api";
+import { deleteTodo, editTodo, getAllTodos, getSingleTodo } from "@/api";
 
 interface TaskProps {
   task: ITask;
@@ -24,6 +24,10 @@ const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
   const [editInputValue, setEditInputValue] = useState<string>(task.title);
   const [editEditorValue, setEditEditorValue] = useState<string>(task.desc);
   const [statusValue, setStatusValue] = useState<string>(task.status);
+  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
+  const [descHtml, setDescHtml] = useState<string>("");
+
+  console.log(selectedTask)
 
   const handleEditFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -44,6 +48,13 @@ const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
     const updatedTasks = await getAllTodos();
     setTasks(updatedTasks);
     setModalOpenToDelete(false);
+  };
+
+  const handleTitleClick = async () => {
+    setModalOpenToDetail(true)
+    const taskData = await getSingleTodo(task.id);
+    setSelectedTask(taskData);
+    setDescHtml(taskData.desc);
   };
 
   const handleSelectChange = async (e: ChangeEvent<HTMLSelectElement>) => {
@@ -76,8 +87,8 @@ const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
 
   return (
     <tr key={task.id}>
-      <td className="text-center">{index + 1}</td>
-      <td className="text-center">{task.title}</td>
+      <td className="text-center" onClick={handleTitleClick}>{index + 1}</td>
+      <td className="text-center" onClick={handleTitleClick}>{task.title}</td>
       <td className="text-center">
         <select
           className="select select-ghost w-full max-w-xs"
@@ -153,9 +164,10 @@ const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
           setModalOpen={setModalOpenToDetail}
         >
           <h3 className="text-lg">
-            Are you sure, you want to delete this task?
+            {selectedTask?.title}
           </h3>
-          <div className="modal-action"></div>
+          <div className="modal-action justify-center" dangerouslySetInnerHTML={{ __html: descHtml }}>
+          </div>
         </Modal>
       </td>
     </tr>

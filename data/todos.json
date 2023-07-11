@@ -1,10 +1,10 @@
 {
   "tasks": [
     {
-      "id": "1",
-      "title": "Glossary 5",
-      "desc": "<ol><li><strong>Tomato</strong></li><li><u>onion</u></li><li><span class=\"ql-size-large\">Sweet-Potato</span></li><li>red chillies</li><li>green chillies</li><li>sweets</li></ol>",
-      "status": "Completed"
+      "id": "6ce16a92-8057-4500-8bac-b7428453c20d",
+      "title": "Go To The Market",
+      "desc": "<ol><li><strong><span class=\"ql-cursor\">﻿</span></strong>soap</li><li><strong>toothpaste</strong></li></ol><p class=\"ql-align-right\"><em>facewash</em></p>",
+      "status": "To Do"
     }
   ]
 }

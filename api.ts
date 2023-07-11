@@ -97,8 +97,8 @@ export const editTodo = async (todo: ITask): Promise<ITask> => {
 
 };
 
-export const getSingleTodo = async (todo: ITask): Promise<ITask> => {
-  const res = await fetch(`${baseUrl}/tasks/${todo.id}`, {});
+export const getSingleTodo = async (id: string): Promise<ITask> => {
+  const res = await fetch(`${baseUrl}/tasks/${id}`, {});
   const singleTodo = await res.json();
   return singleTodo;
 };
