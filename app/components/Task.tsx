@@ -6,32 +6,32 @@ import { FiEdit, FiTrash } from "react-icons/fi";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Modal from "./Modal";
-import { useRouter } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
-import { deleteTodo, editTodo } from "@/api";
+import { deleteTodo, editTodo, getAllTodos } from "@/api";
 
 interface TaskProps {
   task: ITask;
+  setTasks: any;
   index: number;
 }
 
-const Task: React.FC<TaskProps> = ({ task , index }) => {
-  const router = useRouter();
+const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
+
   const [modalOpenToEdit, setModalOpenToEdit] = useState<boolean>(false);
   const [modalOpenToDelete, setModalOpenToDelete] = useState<boolean>(false);
   const [modalOpenToDetail, setModalOpenToDetail] = useState<boolean>(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [isSelectChanged, setIsSelectChanged] = useState<boolean>(false);
   const [editInputValue, setEditInputValue] = useState<string>(task.title);
   const [editEditorValue, setEditEditorValue] = useState<string>(task.desc);
   const [statusValue, setStatusValue] = useState<string>(task.status);
-  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
-  const [isSelectChanged, setIsSelectChanged] = useState<boolean>(false);
 
   const handleEditFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     setIsFormSubmitted(true);
     setIsSelectChanged(false);
     setModalOpenToEdit(false);
-    router.refresh();
+    const updatedTasks = await getAllTodos();
+    setTasks(updatedTasks);
   };
 
   const handleEditorChange = (newValue: string) => {
@@ -41,8 +41,9 @@ const Task: React.FC<TaskProps> = ({ task , index }) => {
 
   const handleDeleteTask = async (id: string) => {
     await deleteTodo(id);
+    const updatedTasks = await getAllTodos();
+    setTasks(updatedTasks);
     setModalOpenToDelete(false);
-    router.refresh();
   };
 
   const handleSelectChange = async (e: ChangeEvent<HTMLSelectElement>) => {
@@ -69,26 +70,24 @@ const Task: React.FC<TaskProps> = ({ task , index }) => {
       desc: editEditorValue,
       status: statusValue,
     });
-    router.refresh();
+    const updatedTasks = await getAllTodos();
+    setTasks(updatedTasks);
   };
 
   return (
     <tr key={task.id}>
-      <td className="text-center">{index+1}</td>
+      <td className="text-center">{index + 1}</td>
       <td className="text-center">{task.title}</td>
       <td className="text-center">
-        <select 
-        className="select select-ghost w-full max-w-xs" 
-        value={statusValue} 
-        onChange={handleSelectChange}
+        <select
+          className="select select-ghost w-full max-w-xs"
+          value={statusValue}
+          onChange={handleSelectChange}
         >
-
-  <option value="To Do">To Do</option>
-  <option value="In Progress">In Progress</option>
-  <option value="Completed">Completed</option>
-</select>
-
-
+          <option value="To Do">To Do</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
       </td>
       <td className="flex gap-5 text-center items-center justify-center ">
         <FiEdit
@@ -123,7 +122,7 @@ const Task: React.FC<TaskProps> = ({ task , index }) => {
             />
             <br />
             <button className="btn" type="submit">
-              Submit
+              Update
             </button>
           </form>
         </Modal>
@@ -156,9 +155,7 @@ const Task: React.FC<TaskProps> = ({ task , index }) => {
           <h3 className="text-lg">
             Are you sure, you want to delete this task?
           </h3>
-          <div className="modal-action">
-           
-          </div>
+          <div className="modal-action"></div>
         </Modal>
       </td>
     </tr>

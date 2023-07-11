@@ -2,9 +2,9 @@
   "tasks": [
     {
       "id": "1",
-      "title": "Glossary ",
+      "title": "Glossary 5",
       "desc": "<ol><li><strong>Tomato</strong></li><li><u>onion</u></li><li><span class=\"ql-size-large\">Sweet-Potato</span></li><li>red chillies</li><li>green chillies</li><li>sweets</li></ol>",
-      "status": "To Do"
+      "status": "Completed"
     }
   ]
 }

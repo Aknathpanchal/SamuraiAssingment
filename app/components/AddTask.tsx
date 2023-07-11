@@ -5,12 +5,18 @@ import Modal from "./Modal";
 import { FormEventHandler, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { addTodo } from "@/api";
+import { addTodo, getAllTodos } from "@/api";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { modules, formats } from "@/types/tasks";
+import { ITask } from "@/types/tasks";
 
-const AddTask = () => {
+interface AddTaskProps {
+  tasks: ITask[];
+  setTasks: any
+}
+
+const AddTask: React.FC<AddTaskProps> = ({tasks, setTasks}) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
@@ -18,16 +24,18 @@ const AddTask = () => {
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    await addTodo({
+    const payload={
       id: uuidv4(),
       title: inputValue,
       desc: editorValue,
       status: "To Do",
-    });
+    }
+    await addTodo(payload);
     setInputValue("");
     setEditorValue("");
+    const updatedTasks = await getAllTodos();
+    setTasks(updatedTasks);
     setModalOpen(false);
-    router.refresh();
   };
 
   const handleEditorChange = (newValue: string) => {

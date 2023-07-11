@@ -3,9 +3,10 @@ import Task from "./Task";
 
 interface TodoListProps {
   tasks: ITask[];
+  setTasks: any
 }
 
-const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
+const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks }) => {
   return (
     <div className="overflow-x-auto">
       <table className="table table-zebra">
@@ -19,7 +20,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
         </thead>
         <tbody>
           {tasks.map((task, taskIndex) => (
-            <Task key={task.id} task={task} index={taskIndex} />
+            <Task key={task.id} task={task} setTasks={setTasks} index={taskIndex} />
           ))}
         </tbody>
       </table>
