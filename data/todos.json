@@ -1,22 +1,10 @@
 {
   "tasks": [
     {
-      "id": "6ce16a92-8057-4500-8bac-b7428453c20d",
-      "title": "Go To The Market",
-      "desc": "<ol><li><strong>﻿</strong>soap</li><li><strong>toothpaste</strong></li></ol><p class=\"ql-align-right\"><em>facewash</em></p>",
-      "status": "To Do"
-    },
-    {
       "id": "6ce16a92-8057-4500-8bac-b7428453c204",
       "title": "Go To The stor8",
       "desc": "<ol><li><strong>﻿</strong>soap</li></ol><ul><li><strong>toothpaste</strong></li></ul><p class=\"ql-align-right\"><em>facewash</em></p>",
       "status": "To Do"
-    },
-    {
-      "id": "69d523a6-49c0-4c17-aee5-257737632038",
-      "title": "hjj",
-      "desc": "<p>bbnb</p>",
-      "status": "In Progress"
     }
   ]
 }

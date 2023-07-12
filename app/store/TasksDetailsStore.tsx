@@ -85,7 +85,7 @@ export class TasksDetailsStore {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        // progress: undefined,
         theme: "light",
       });
     } catch (error) {
@@ -97,7 +97,7 @@ export class TasksDetailsStore {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        // progress: undefined,
         theme: "light",
       });
     }
@@ -125,7 +125,7 @@ displayed. If there is an error, an error toast message is displayed. */
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
+      // progress: undefined,
       theme: "light",
       });
     } catch (error) {
@@ -136,7 +136,7 @@ displayed. If there is an error, an error toast message is displayed. */
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        // progress: undefined,
         theme: "light",
         });
     }
@@ -157,7 +157,7 @@ displayed. If there is an error, an error toast message is displayed. */
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        // progress: undefined,
         theme: "light",
         });
     } catch (error) {
@@ -168,7 +168,7 @@ displayed. If there is an error, an error toast message is displayed. */
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        // progress: undefined,
         theme: "light",
         });
     }
