@@ -1,3 +1,5 @@
+"use client";
+
 import { ITask } from "@/types/tasks";
 import { IRootStore } from "./RootStore";
 import { action, computed, makeObservable, observable } from "mobx";
