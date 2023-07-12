@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { ITask } from "@/types/tasks";
 import { IRootStore } from "./RootStore";
