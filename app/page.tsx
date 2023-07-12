@@ -1,23 +1,25 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
-import { getAllTodos } from "@/api";
 import AddTask from "./components/AddTask";
 import TodoList from "./components/TodoList";
 import { ITask } from "@/types/tasks";
+import { observer } from "mobx-react-lite";
+import { useStore } from "./store";
 
-export default function Home() {
+const Home = observer(() => {
+  const {
+    rootStore: { tasksDetails },
+  } = useStore();
+
   const [tasks, setTasks] = useState<ITask[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const tasksData: ITask[] = await getAllTodos();
-      setTasks(tasksData);
-    };
-
-    fetchData();
-  }, []);
+    tasksDetails.fetchTasksDetails().then(() => {
+      const userDetails = tasksDetails.getTasksDetails;
+      setTasks(userDetails);
+    });
+  }, [tasksDetails]);
 
   return (
     <main className="flex min-h-screen flex-col items-center p-10">
@@ -28,6 +30,6 @@ export default function Home() {
       <TodoList tasks={tasks} setTasks={setTasks} />
     </main>
   );
-}
+});
 
-
+export default Home;

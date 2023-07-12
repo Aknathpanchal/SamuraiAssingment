@@ -6,7 +6,8 @@ import { FiEdit, FiTrash } from "react-icons/fi";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Modal from "./Modal";
-import { deleteTodo, editTodo, getAllTodos, getSingleTodo } from "@/api";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../store";
 
 interface TaskProps {
   task: ITask;
@@ -14,7 +15,20 @@ interface TaskProps {
   index: number;
 }
 
-const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
+/**
+ * The `Task` component is a table row that displays task information and allows for editing, deleting,
+ * and viewing task details.
+ * @param  - - `task`: The task object containing information about the task (e.g., id, title, desc,
+ * status).
+ * @returns The code is returning a table row (`<tr>`) element with several table data (`<td>`)
+ * elements. Each table data element contains different components and elements, such as text, a select
+ * dropdown, and icons. The table row represents a task and its details, such as the task title,
+ * status, and actions (edit and delete).
+ */
+const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
+  const {
+    rootStore: { tasksDetails },
+  } = useStore();
 
   const [modalOpenToEdit, setModalOpenToEdit] = useState<boolean>(false);
   const [modalOpenToDelete, setModalOpenToDelete] = useState<boolean>(false);
@@ -24,39 +38,62 @@ const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
   const [editInputValue, setEditInputValue] = useState<string>(task.title);
   const [editEditorValue, setEditEditorValue] = useState<string>(task.desc);
   const [statusValue, setStatusValue] = useState<string>(task.status);
-  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
-  const [descHtml, setDescHtml] = useState<string>("");
 
-  console.log(selectedTask)
-
+  /**
+   * The function `handleEditFormSubmit` is an asynchronous event handler that updates tasks and closes a
+   * modal.
+   * @param e - The parameter `e` is the event object that is passed to the event handler function. In
+   * this case, it is the form submit event object.
+   */
   const handleEditFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     setIsFormSubmitted(true);
     setIsSelectChanged(false);
     setModalOpenToEdit(false);
-    const updatedTasks = await getAllTodos();
-    setTasks(updatedTasks);
   };
 
+  /**
+   * The function `handleEditorChange` updates the value of `editEditorValue` and sets `isFormSubmitted`
+   * to false.
+   * @param {string} newValue - The `newValue` parameter is a string that represents the updated value of
+   * the editor. It is the new value that the user has entered or modified in the editor.
+   */
   const handleEditorChange = (newValue: string) => {
     setEditEditorValue(newValue);
     setIsFormSubmitted(false);
   };
 
+  /**
+   * The function `handleDeleteTask` deletes a task with the given ID, updates the list of tasks, and
+   * closes the delete modal.
+   * @param {string} id - The `id` parameter is a string that represents the unique identifier of a task
+   * that needs to be deleted.
+   */
   const handleDeleteTask = async (id: string) => {
-    await deleteTodo(id);
-    const updatedTasks = await getAllTodos();
-    setTasks(updatedTasks);
+    await tasksDetails.deleteTask(id);
+    await tasksDetails.fetchTasksDetails();
+    setTasks(tasksDetails.getTasksDetails);
     setModalOpenToDelete(false);
   };
 
-  const handleTitleClick = async () => {
-    setModalOpenToDetail(true)
-    const taskData = await getSingleTodo(task.id);
-    setSelectedTask(taskData);
-    setDescHtml(taskData.desc);
+  /**
+   * The function `handleTitleClick` sets the modal open state to true, retrieves a single todo task,
+   * sets the selected task and description HTML state.
+   */
+  const handleTitleClick = async (id: string) => {
+    setModalOpenToDetail(true);
+    await tasksDetails.getSingleTask(id);
+    await tasksDetails.fetchTasksDetails();
+    setModalOpenToDelete(false);
   };
 
+  /**
+   * The function `handleSelectChange` updates the status value based on the selected option in a
+   * dropdown menu and sets flags to indicate if the select has changed and if the form has been
+   * submitted.
+   * @param e - The parameter `e` is of type `ChangeEvent<HTMLSelectElement>`. It represents the event
+   * object that is triggered when the value of the select element is changed.
+   */
   const handleSelectChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     const newStatus = e.target.value;
     if (newStatus !== statusValue) {
@@ -74,30 +111,38 @@ const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
     }
   }, [isFormSubmitted, isSelectChanged]);
 
+  /**
+   * The `editTask` function updates a task's details and fetches the updated task list.
+   */
   const editTask = async () => {
-    await editTodo({
+    const payload = {
       id: task.id,
       title: editInputValue,
       desc: editEditorValue,
       status: statusValue,
-    });
-    const updatedTasks = await getAllTodos();
-    setTasks(updatedTasks);
+    };
+    await tasksDetails.editTask(payload);
+    await tasksDetails.fetchTasksDetails();
+    setTasks(tasksDetails.getTasksDetails);
   };
 
   return (
     <tr key={task.id}>
-      <td className="text-center" onClick={handleTitleClick}>{index + 1}</td>
-      <td className="text-center" onClick={handleTitleClick}>{task.title}</td>
+      <td className="text-center" onClick={() => handleTitleClick(task.id)}>
+        {index + 1}
+      </td>
+      <td className="text-center" onClick={() => handleTitleClick(task.id)}>
+        {task.title}
+      </td>
       <td className="text-center">
         <select
           className="select select-ghost w-full max-w-xs"
           value={statusValue}
           onChange={handleSelectChange}
         >
-          <option value="To Do">To Do</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
+          <option className="" value="To Do">To Do</option>
+          <option className="" value="In Progress">In Progress</option>
+          <option className="" value="Completed">Completed</option>
         </select>
       </td>
       <td className="flex gap-5 text-center items-center justify-center ">
@@ -164,14 +209,19 @@ const Task: React.FC<TaskProps> = ({ task, setTasks, index }) => {
           setModalOpen={setModalOpenToDetail}
         >
           <h3 className="text-lg">
-            {selectedTask?.title}
+            {/* {selectedTask?.title} */}
+            {tasksDetails.getTaskDetail?.title}
           </h3>
-          <div className="modal-action justify-center" dangerouslySetInnerHTML={{ __html: descHtml }}>
-          </div>
+          <div
+            className="modal-action justify-center"
+            dangerouslySetInnerHTML={{
+              __html: tasksDetails.getTaskDetail?.desc,
+            }}
+          ></div>
         </Modal>
       </td>
     </tr>
   );
-};
+});
 
 export default Task;
