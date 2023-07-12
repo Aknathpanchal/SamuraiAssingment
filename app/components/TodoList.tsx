@@ -1,3 +1,5 @@
+"use client";
+
 import { ITask } from "@/types/tasks";
 import Task from "./Task";
 
