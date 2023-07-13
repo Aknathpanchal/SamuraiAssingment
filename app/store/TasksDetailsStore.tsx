@@ -5,8 +5,6 @@ import { IRootStore } from "./RootStore";
 import { action, computed, makeObservable, observable } from "mobx";
 import { toast } from "react-toastify";
 
-const baseUrl = process.env.API_URL;
-
 
 export class TasksDetailsStore {
   tasksDetails: ITask[] = [];
@@ -43,7 +41,6 @@ export class TasksDetailsStore {
   async fetchTasksDetails() {
     const response = await fetch(`api/tasks`);
     const data = await response.json();
-    console.log(data,"data")
     this.tasksDetails = data.seatstatus;
   }
 

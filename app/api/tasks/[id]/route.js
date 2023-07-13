@@ -27,7 +27,7 @@ export async function PATCH(request, { params }) {
  * @returns a JSON response. If the deletion of the todo item is successful, it will return the deleted
  * todo item as a JSON object. If there is an error, it will return the error message as a JSON object.
  */
-export async function DELETE({ params }) {
+export async function DELETE(request, { params }) {
   await dbConnect();
   const id = params.id;
   try {
@@ -45,7 +45,7 @@ export async function DELETE({ params }) {
  * object as a JSON response. If there is an error, it will return the error message as a JSON
  * response.
  */
-export async function GET({ params }) {
+export async function GET(request,{ params }) {
   await dbConnect();
   const id = params.id;
   try {
