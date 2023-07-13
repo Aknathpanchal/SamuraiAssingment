@@ -25,7 +25,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks }) => {
         <tbody>
           {tasks.map((task, taskIndex) => (
             <Task
-              key={task.id}
+              key={task._id}
               task={task}
               setTasks={setTasks}
               index={taskIndex}

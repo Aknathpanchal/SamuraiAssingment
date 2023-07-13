@@ -126,7 +126,7 @@ const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
    */
   const editTask = async () => {
     const payload = {
-      id: task.id,
+      _id:task._id,
       title: editInputValue,
       desc: editEditorValue,
       status: statusValue,
@@ -137,11 +137,11 @@ const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
   };
 
   return (
-    <tr key={task.id}>
-      <td className="text-center" onClick={() => handleTitleClick(task.id)}>
+    <tr key={task._id}>
+      <td className="text-center" onClick={() => handleTitleClick(task._id)}>
         {index + 1}
       </td>
-      <td className="text-center" onClick={() => handleTitleClick(task.id)}>
+      <td className="text-center" onClick={() => handleTitleClick(task._id)}>
         {task.title}
       </td>
       <td className="text-center">
@@ -207,7 +207,7 @@ const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
             Are you sure, you want to delete this task?
           </h3>
           <div className="modal-action">
-            <button className="btn" onClick={() => handleDeleteTask(task.id)}>
+            <button className="btn" onClick={() => handleDeleteTask(task._id)}>
               Yes
             </button>
           </div>

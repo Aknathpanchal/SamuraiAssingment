@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env:{
-        API_URL:"https://ill-rose-cormorant-boot.cyclic.app",
-        // API_URL:"http://localhost:3002"
+        MONGODB_URI:"mongodb+srv://aknath_08:FZR6wipROr6HSh3b@cluster0.hfkca9p.mongodb.net/task?retryWrites=true&w=majority"
     }
 }
 

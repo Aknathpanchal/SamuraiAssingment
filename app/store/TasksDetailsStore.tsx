@@ -1,6 +1,6 @@
 // "use client";
 
-import { ITask } from "@/types/tasks";
+import { ITask, IaddTask } from "@/types/tasks";
 import { IRootStore } from "./RootStore";
 import { action, computed, makeObservable, observable } from "mobx";
 import { toast } from "react-toastify";
@@ -41,9 +41,10 @@ export class TasksDetailsStore {
  * tasksDetails variable.
  */
   async fetchTasksDetails() {
-    const response = await fetch(`${baseUrl}/tasks`);
+    const response = await fetch(`api/tasks`);
     const data = await response.json();
-    this.tasksDetails = data;
+    console.log(data,"data")
+    this.tasksDetails = data.seatstatus;
   }
 
 /**
@@ -68,9 +69,9 @@ export class TasksDetailsStore {
  * @param {ITask} payload - The payload parameter is an object of type ITask, which contains the data
  * for the task that needs to be added.
  */
-  async addTask(payload: ITask) {
+  async addTask(payload: IaddTask) {
     try {
-      const response = await fetch(`${baseUrl}/tasks`, {
+      const response = await fetch(`api/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +87,7 @@ export class TasksDetailsStore {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        // progress: undefined,
+        progress: undefined,
         theme: "light",
       });
     } catch (error) {
@@ -98,7 +99,7 @@ export class TasksDetailsStore {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        // progress: undefined,
+        progress: undefined,
         theme: "light",
       });
     }
@@ -110,8 +111,8 @@ successful, the updated task is added to the `tasksDetails` array and a success 
 displayed. If there is an error, an error toast message is displayed. */
   async editTask(payload: ITask) {
     try{
-        const response = await fetch(`${baseUrl}/tasks/${payload.id}`, {
-      method: "PUT",
+        const response = await fetch(`api/tasks/${payload._id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -126,7 +127,7 @@ displayed. If there is an error, an error toast message is displayed. */
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      // progress: undefined,
+      progress: undefined,
       theme: "light",
       });
     } catch (error) {
@@ -137,7 +138,7 @@ displayed. If there is an error, an error toast message is displayed. */
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        // progress: undefined,
+        progress: undefined,
         theme: "light",
         });
     }
@@ -148,7 +149,7 @@ displayed. If there is an error, an error toast message is displayed. */
   parameter, which represents the id of the task to be deleted. */
   async deleteTask(id: string){
     try {
-      await fetch(`${baseUrl}/tasks/${id}`, {
+      await fetch(`api/tasks/${id}`, {
         method: "DELETE",
       });
       toast.success('Task delete successfully!', {
@@ -158,7 +159,7 @@ displayed. If there is an error, an error toast message is displayed. */
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        // progress: undefined,
+        progress: undefined,
         theme: "light",
         });
     } catch (error) {
@@ -169,7 +170,7 @@ displayed. If there is an error, an error toast message is displayed. */
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        // progress: undefined,
+        progress: undefined,
         theme: "light",
         });
     }
@@ -180,7 +181,7 @@ provided `id`. It sends a GET request to the specified URL with the `id` paramet
 Once the response is received, it is converted to JSON format and assigned to the `singleTask`
 variable. Finally, the `taskDetail` property of the store is updated with the fetched task. */
   async getSingleTask(id: string){
-    const res = await fetch(`${baseUrl}/tasks/${id}`);
+    const res = await fetch(`api/tasks/${id}`);
     const singleTask = await res.json();
     this.taskDetail = singleTask;
   };

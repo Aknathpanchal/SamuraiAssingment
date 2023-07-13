@@ -10,13 +10,16 @@
     "json-server": "json-server --watch data/todos.json --port 3002"
   },
   "dependencies": {
+    "@types/mongoose": "^5.11.97",
     "@types/node": "20.4.1",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
+    "fs.promises": "^0.1.2",
     "mobx": "^6.9.0",
     "mobx-react-lite": "^3.4.3",
     "mobx-state-tree": "^5.1.8",
+    "mongoose": "^7.3.4",
     "next": "13.4.9",
     "postcss": "8.4.25",
     "react": "18.2.0",

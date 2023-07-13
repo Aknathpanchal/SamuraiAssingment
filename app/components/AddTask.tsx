@@ -3,17 +3,15 @@
 import { AiOutlinePlus } from "react-icons/ai";
 import Modal from "./Modal";
 import { FormEventHandler, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { ITask } from "@/types/tasks";
+import { IaddTask } from "@/types/tasks";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store";
 
 interface AddTaskProps {
-  tasks: ITask[];
   setTasks: any;
 }
 
-const AddTask: React.FC<AddTaskProps> = observer(({ tasks, setTasks }) => {
+const AddTask: React.FC<AddTaskProps> = observer(({setTasks }) => {
   const {
     rootStore: { tasksDetails },
   } = useStore();
@@ -44,10 +42,9 @@ const AddTask: React.FC<AddTaskProps> = observer(({ tasks, setTasks }) => {
       return;
     }
     const payload = {
-      id: uuidv4(),
       title: inputValue,
       desc: editorValue,
-      status: "To Do",
+      status: "To Do"
     };
     await tasksDetails.addTask(payload);
     await tasksDetails.fetchTasksDetails();
