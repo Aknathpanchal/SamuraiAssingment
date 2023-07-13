@@ -3,10 +3,7 @@
 import { AiOutlinePlus } from "react-icons/ai";
 import Modal from "./Modal";
 import { FormEventHandler, useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { v4 as uuidv4 } from "uuid";
-import { modules, formats } from "@/types/tasks";
 import { ITask } from "@/types/tasks";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store";
@@ -24,6 +21,7 @@ const AddTask: React.FC<AddTaskProps> = observer(({ tasks, setTasks }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [editorValue, setEditorValue] = useState<string>("");
+  const [error, setError] = useState<string>('');
 
   /**
    * The handleFormSubmit function is used to handle form submission in a TypeScript React application,
@@ -35,6 +33,16 @@ const AddTask: React.FC<AddTaskProps> = observer(({ tasks, setTasks }) => {
    */
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    if (!editorValue && !inputValue) {
+      setError('Please enter title & description.');
+      return;
+    }else if(!inputValue) {
+      setError('Please enter a title.');
+      return;
+    }else if(!editorValue) {
+      setError('Please enter a description.');
+      return;
+    }
     const payload = {
       id: uuidv4(),
       title: inputValue,
@@ -49,15 +57,7 @@ const AddTask: React.FC<AddTaskProps> = observer(({ tasks, setTasks }) => {
     setModalOpen(false);
   };
 
-  /**
-   * The function `handleEditorChange` updates the value of `editorValue` with the new value passed as an
-   * argument.
-   * @param {string} newValue - newValue is a string parameter that represents the new value of the
-   * editor.
-   */
-  const handleEditorChange = (newValue: string) => {
-    setEditorValue(newValue);
-  };
+
 
   return (
     <div>
@@ -70,29 +70,25 @@ const AddTask: React.FC<AddTaskProps> = observer(({ tasks, setTasks }) => {
       </button>
 
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleFormSubmit} className="flex flex-col gap-5">
           <h3 className="font-bold text-lg">Add New Task</h3>
-          <br />
+         
           <input
-            required
             className="input input-bordered w-full"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             type="text"
             placeholder="Enter title here..."
           />
-          <br />
-          <br />
-          <ReactQuill
-            className="w-full"
-            theme="snow"
-            modules={modules}
-            formats={formats}
-            value={editorValue}
-            onChange={handleEditorChange}
-            placeholder="Enter description here..."
-          />
-          <br />
+        
+          <textarea
+          className="textarea textarea-bordered textarea-md w-full"
+          placeholder="Enter description here..." 
+          onChange={(e) => setEditorValue(e.target.value)}>
+          </textarea>
+
+          {error && <p className="error text-red-500">{error}</p>}
+        
           <button className="btn" type="submit">
             Submit
           </button>

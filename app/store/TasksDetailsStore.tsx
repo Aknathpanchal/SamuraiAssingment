@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 
 const baseUrl = process.env.API_URL;
 
+
 export class TasksDetailsStore {
   tasksDetails: ITask[] = [];
   taskDetail: ITask = {} as ITask;

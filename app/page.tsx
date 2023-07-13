@@ -7,7 +7,7 @@ import { ITask } from "@/types/tasks";
 import { observer } from "mobx-react-lite";
 import { useStore } from "./store";
 
-const Home = observer(() => {
+export default observer(function Home(){
   const {
     rootStore: { tasksDetails },
   } = useStore();
@@ -31,5 +31,3 @@ const Home = observer(() => {
     </main>
   );
 });
-
-export default Home;

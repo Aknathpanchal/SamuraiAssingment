@@ -1,10 +1,8 @@
 "use client";
 
-import { ITask, modules, formats } from "@/types/tasks";
-import { ChangeEvent, FormEventHandler, useEffect, useState } from "react";
+import { ITask } from "@/types/tasks";
+import { ChangeEvent, FormEventHandler, useEffect, useState, ChangeEventHandler  } from "react";
 import { FiEdit, FiTrash } from "react-icons/fi";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import Modal from "./Modal";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store";
@@ -38,6 +36,7 @@ const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
   const [editInputValue, setEditInputValue] = useState<string>(task.title);
   const [editEditorValue, setEditEditorValue] = useState<string>(task.desc);
   const [statusValue, setStatusValue] = useState<string>(task.status);
+  const [error, setError] = useState<string>('');
 
   /**
    * The function `handleEditFormSubmit` is an asynchronous event handler that updates tasks and closes a
@@ -47,6 +46,16 @@ const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
    */
   const handleEditFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    if (!editEditorValue && !editInputValue) {
+      setError('Please enter title & description.');
+      return;
+    }else if(!editInputValue) {
+      setError('Please enter a title.');
+      return;
+    }else if(!editEditorValue) {
+      setError('Please enter a description.');
+      return;
+    }
     setIsFormSubmitted(true);
     setIsSelectChanged(false);
     setModalOpenToEdit(false);
@@ -58,7 +67,8 @@ const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
    * @param {string} newValue - The `newValue` parameter is a string that represents the updated value of
    * the editor. It is the new value that the user has entered or modified in the editor.
    */
-  const handleEditorChange = (newValue: string) => {
+  const handleEditorChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
+    const newValue = event.target.value;
     setEditEditorValue(newValue);
     setIsFormSubmitted(false);
   };
@@ -154,9 +164,9 @@ const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
         />
 
         <Modal modalOpen={modalOpenToEdit} setModalOpen={setModalOpenToEdit}>
-          <form onSubmit={handleEditFormSubmit}>
+          <form onSubmit={handleEditFormSubmit} className="flex flex-col gap-5">
             <h3 className="font-bold text-lg">Edit Task</h3>
-            <br />
+            
             <input
               required
               className="input input-bordered w-full"
@@ -165,18 +175,17 @@ const Task: React.FC<TaskProps> = observer(({ task, setTasks, index }) => {
               type="text"
               placeholder="Enter title here..."
             />
-            <br />
-            <br />
-            <ReactQuill
-              className="w-full"
-              theme="snow"
-              modules={modules}
-              formats={formats}
-              value={editEditorValue}
-              onChange={handleEditorChange}
-              placeholder="Enter description here..."
-            />
-            <br />
+
+             <textarea
+          className="textarea textarea-bordered textarea-md w-full"
+          placeholder="Enter description here..." 
+          value={editEditorValue}
+          onChange={handleEditorChange}
+          >
+          </textarea>
+
+          {error && <p className="error text-red-500">{error}</p>}
+        
             <button className="btn" type="submit">
               Update
             </button>
