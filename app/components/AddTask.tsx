@@ -3,7 +3,6 @@
 import { AiOutlinePlus } from "react-icons/ai";
 import Modal from "./Modal";
 import { FormEventHandler, useState } from "react";
-import { IaddTask } from "@/types/tasks";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store";
 

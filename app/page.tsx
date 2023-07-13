@@ -25,7 +25,7 @@ export default observer(function Home(){
     <main className="flex min-h-screen flex-col items-center p-10">
       <div className="text-center my-5 flex flex-col gap-4">
         <h1 className="text-2xl font-bold">Task Management Application</h1>
-        <AddTask tasks={tasks} setTasks={setTasks} />
+        <AddTask setTasks={setTasks} />
       </div>
       <TodoList tasks={tasks} setTasks={setTasks} />
     </main>
